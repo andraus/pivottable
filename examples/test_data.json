@@ -1,5 +1,8 @@
 [
-    {"color": "blue", "shape": "circle", "border": "dot" },
-    {"color": "blue", "shape": "circle", "border": "zigzag"},
-    {"color": "red", "shape": "triangle", "border": "line" }
+    { "color": "blue", "shape": "circle",   "border": "dot"    },
+    { "color": "blue", "shape": "circle",   "border": "zigzag" },
+    { "color": "blue",  "shape": "circle", "border": "line"   },
+    { "color": "red",  "shape": "triangle", "border": "line"   },
+    { "color": "red",  "shape": "circle",   "border": "line" },
+    { "color": "red",  "shape": "circle",   "border": "zigzag" }
 ]

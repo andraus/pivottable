@@ -4,6 +4,9 @@ $ = jQuery
 Utilities
 ###
 
+assemblePartialTotalsKey = (key1, key2) ->
+  return (if !key1 or key1 == "" then "0" else key1) + "|" + (if !key2 or key2 == "" then "0" else key2)
+
 addCommas = (nStr) ->
     nStr += ''
     x = nStr.split('.')
@@ -70,6 +73,16 @@ aggregatorTemplates =
         label: wrapped(x...)(data, rowKey, colKey).label+" % of "+type
         value: -> @inner.value() / data.getAggregator(@selector...).inner.value()
 
+    partialFractionOf: (wrapped, type="total") -> (x...) -> (data, rowKey, colKey) ->
+      selector: {total:[[],[]],row:[rowKey,[]],col:[[],colKey]}[type]
+      inner: wrapped(x...)(data, rowKey, colKey)
+      push: (record) -> @inner.push record
+      format: (v) -> numberFormat(2)(100*v)+"%"
+      label: wrapped(x...)(data, rowKey, colKey).label+" % of "+type
+      value: ->
+        key = assemblePartialTotalsKey rowKey, colKey[0]
+        rowSubTotal = if data.partialRowTotalsMap[key] then data.partialRowTotalsMap[key] else data.getAggregator(@selector...).inner.value()
+        @inner.value() / rowSubTotal
 
 
 #technically these are aggregator constructor generators (!)
@@ -196,6 +209,7 @@ class PivotData
         @colTotals = {}
         @allTotal = @aggregator(this, [], [])
         @sorted = false
+        @partialRowTotalsMap = {}
     
     natSort: (as, bs) => #from http://stackoverflow.com/a/4373421/112871
       rx = /(\d+)|(\D+)/g
@@ -242,6 +256,12 @@ class PivotData
     processRecord: (record) ->
         colKey = (record[x] for x in @colAttrs)
         rowKey = (record[x] for x in @rowAttrs)
+
+        partialTotalsKey = assemblePartialTotalsKey rowKey[0], colKey[0]
+        if partialTotalsKey of @partialRowTotalsMap
+          @partialRowTotalsMap[partialTotalsKey]++
+        else
+          @partialRowTotalsMap[partialTotalsKey] = 1
 
         flatRowKey = @flattenKey rowKey
         flatColKey = @flattenKey colKey
