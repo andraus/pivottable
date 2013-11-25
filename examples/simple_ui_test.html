@@ -1,0 +1,37 @@
+
+<html>
+    <head>
+        <title>Pivot Demo</title>
+        <link rel="stylesheet" type="text/css" href="pivot.css">
+        <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="jquery-ui-1.9.2.custom.min.js"></script>
+        <script type="text/javascript" src="pivot.js"></script>
+    </head>
+    <style>
+        * {font-family: Verdana;}
+    </style>
+    <body>
+        <script type="text/javascript">
+
+            var countUnique = $.pivotUtilities.aggregators.countUnique;
+            var percents = function() { return countUnique(["shape"]); }
+
+            $(function(){
+                        $("#output").pivotUI(
+        [ 
+            {color: "blue", shape: "circle", border: "dot" },
+            {color: "red", shape: "triangle", border: "line" },
+            {color: "purple", shape: "triangle", border: "thick" }
+        ], 
+        { 
+            cols: ["shape", "border"],
+            aggreggator: percents()
+        }
+    );
+             });
+        </script>
+
+        <div id="output" style="margin: 10px;"></div>
+
+    </body>
+</html>

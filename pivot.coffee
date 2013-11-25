@@ -81,6 +81,13 @@ aggregators =
         format: numberFormat(0)
         label: "Count"
 
+    customCount: -> ->
+      count: 0
+      push:  -> @count++
+      value: -> @count
+      format: numberFormat(0)
+      label: "Custom Count"
+
     countUnique: ([attr]) -> ->
         uniq: []
         push: (record) -> @uniq.push(record[attr]) if record[attr] not in @uniq
@@ -108,7 +115,6 @@ aggregators.sumAsFractionOfCol= aggregatorTemplates.fractionOf(aggregators.sum, 
 aggregators.countAsFractionOfTotal= aggregatorTemplates.fractionOf(aggregators.count)
 aggregators.countAsFractionOfRow= aggregatorTemplates.fractionOf(aggregators.count, "row")
 aggregators.countAsFractionOfCol= aggregatorTemplates.fractionOf(aggregators.count, "col")
-
 
 renderers =
     "Table": (pvtData) -> pivotTableRenderer(pvtData)

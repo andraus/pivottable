@@ -6,24 +6,41 @@
         <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
         <script type="text/javascript" src="jquery-ui-1.9.2.custom.min.js"></script>
         <script type="text/javascript" src="pivot.js"></script>
+
+        <script type="text/javascript" src="lib/log4javascript.js"></script>
+        <script type="text/javascript">
+            //var log = log4javascript.getDefaultLogger();
+            var log = log4javascript.getLogger();
+
+            var appender = new log4javascript.InPageAppender();
+            appender.setNewestMessageAtTop(true);
+
+            log.addAppender(appender);
+
+        </script>
     </head>
     <style>
         * {font-family: Verdana;}
     </style>
     <body>
         <script type="text/javascript">
+
+            log.info("yay!");
+
+            var percentsFunction = $.pivotUtilities.aggregatorTemplates.fractionOf($.pivotUtilities.aggregators.customCount)
+            var percents = function() { return percentsFunction(); }
+
+            var rend = function(param) { return $.pivotUtilities.renderers.Table; }
+
             $(function(){
-                        $("#output").pivot(
-        [
-            {color: "blue", shape: "circle"},
-            {color: "red", shape: "triangle"}
-        ],
-        {
-            rows: ["color"],
-            cols: ["shape"]
-        }
-    );
-             });
+                $.getJSON("test_data.json", function(testData) {
+                    $("#output").pivot(testData, {
+                        cols: ["shape", "border"],
+                        aggregator: percents(),
+                        renderer: rend(testData)
+                    });
+                });
+            });
         </script>
 
         <div id="output" style="margin: 10px;"></div>

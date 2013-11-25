@@ -1,0 +1,5 @@
+[
+    {"color": "blue", "shape": "circle", "border": "dot" },
+    {"color": "blue", "shape": "circle", "border": "zigzag"},
+    {"color": "red", "shape": "triangle", "border": "line" }
+]
